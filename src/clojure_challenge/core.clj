@@ -2,12 +2,19 @@
   (:require [clojure.math.combinatorics :as combo]))
 
 (defn scramble?
-  [^String str1 ^String str2]
-  (let [combos (combo/combinations (seq str1) (count str2))]
-    (true? (seq (filter (fn [combo]
-                          (= (frequencies combo)
-                             (frequencies (seq str2))))
-                        combos)))))
+  [letters word]
+  (let [searched (set word)]
+    (every? true?
+            (apply
+              (fn [coll1 coll2]
+                (map
+                  (fn [n1 n2]
+                    (if n1
+                      (>= n1 n2)
+                      false))
+                  coll1 coll2))
+              (for [char-seq [letters word]]
+                (map (frequencies char-seq) searched))))))
 
 (defn scramble?-optimized-prototype
   [^String letters ^String word]
@@ -28,29 +35,22 @@
         available))))
 
 
-(clojure.pprint/pprint
-  (let [letters "katas"
-        word    "steak"]
-    (let [searched (select-keys
-                     (frequencies word)
-                     (keys (frequencies word)))
-          available (select-keys
-                      (frequencies letters)
-                      (keys (frequencies word)))
-          result    (every?
-                      true?
-                      (map
-                        (fn [[se-name searched] [av-name available]]
-                          (assert (= se-name av-name))
-                          (if available
-                            (>= available searched)
-                            false))
-                        searched
-                        available))]
-      {:result result
-       :available available
-       :searched searched})))
-
+(defn scramble?-transducers
+  [letters word]
+  (let [searched (set word)]
+    (every? true?
+            (apply
+              (fn [coll1 coll2]
+                (map
+                  (fn [n1 n2]
+                    (if n1
+                      (>= n1 n2)
+                      false))
+                  coll1 coll2))
+              (let [available letters
+                    required word]
+                (for [char-seq [available required]]
+                  (map (frequencies char-seq) searched)))))))
 
 ;; test cases
 
@@ -84,5 +84,4 @@
 
 
 (defn -main [args]
-  (clojure.pprint/pprint
-   "Hello! :)"))
+  (println "Hello! :)"))
