@@ -1,20 +1,30 @@
-(ns clojure-challenge.core)
+(ns clojure-challenge.core
+  (:require [clojure.spec.alpha :as spec]))
+
+(defn gte-and-not-nil? [x y]
+  "Returns true if x is not nil and is greater than y, otherwise
+  returns false."
+  (if x (>= x y) false))
 
 
 ;; Clojure Challenge
 
-(defn- gte-and-not-nil? [x y]
-  "Returns true if x is not nil and is greater than y."
-  (if x (>= x y) false))
+(defn valid-to-scramble? [^String s]
+  "Returns true if given string s contains only lowercase letters
+  from a to z."
+  (if (re-matches #"[a-z]+" s) true false))
+
+(spec/def ::lowercase #(partial valid-to-scramble? (or % "")))
 
 (defn scramble?
   "Returns true if a portion of str1 characters can be rearranged
   to match str2 otherwise returns false."
   [str1 str2]
-  (->> [str1 str2]
-       (map #(map (frequencies %) (set str2)))
-       (apply #(map gte-and-not-nil? %1 %2))
-       (every? true?)))
+  (let [args [str1 str2]]
+    (->> args
+         (map    #(map (frequencies %) (set str2)))
+         (apply  #(map gte-and-not-nil? %1 %2))
+         (every? true?))))
 
 
 ;; Benchmarking

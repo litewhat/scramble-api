@@ -3,9 +3,29 @@
             [clojure-challenge.core :refer :all]))
 
 (deftest test-scramble?
-  (testing "when lowercase letters"
-    (is (= (scramble? "rekqodlw" "world") true))
-    (is (= (scramble? "cedewaraaossoqqyt" "codewars") true))
-    (is (= (scramble? "katas" "steak") false))
-    (is (= (scramble? "ala" "ala") true))
-    (is (= (scramble? "barfo" "foobar") false))))
+  (testing "when lowercase letters from a to z"
+    (is (= true  (scramble? "rekqodlw" "world")))
+    (is (= true  (scramble? "cedewaraaossoqqyt" "codewars")))
+    (is (= false (scramble? "katas" "steak")))
+    (is (= true  (scramble? "ala" "ala")))
+    (is (= false (scramble? "barforu" "foobar"))))
+
+  ;(testing "when lowercase letters not from a to z"
+  ;  (is (= nil (scramble? "ąśąśśś" "world")))
+  ;  (is (= nil (scramble? "cedewaraaossoqqyt" "codewars")))
+  ;  (is (= nil (scramble? "katas" "steak")))
+  ;  (is (= nil (scramble? "ala" "ala")))
+  ;  (is (= nil (scramble? "barforu" "foobar"))))
+  ;
+  ;(testing "when args other than strings"
+  ;  (is (= nil (scramble? nil nil))))
+  )
+
+(deftest test-valid-to-scramble?
+  (is (= false (valid-to-scramble? "uashiduh23rjsi3b5h23bj2hbkjh23b4kj2h3")))
+  (is (= true  (valid-to-scramble? "uashiduhrjsibhbjhbkjhbkjh")))
+  (is (= false (valid-to-scramble? "uashiduhrjsibhbjhbkjhbSkjh")))
+  (is (= false (valid-to-scramble? "ASDASDASDAWRAEFSSSE$%#Q$#$T")))
+  (is (= false (valid-to-scramble? "asdasdas ")))
+  (is (= false (valid-to-scramble? "ASDASDASDAWRAEFSSSE$%#Q$#$T")))
+  (is (= false (valid-to-scramble? "ółść"))))
