@@ -2,34 +2,35 @@
   (:require [clojure.spec.alpha :as spec])
   (:gen-class))
 
+;; Preds
+
 (defn gte-and-not-nil? [x y]
-  "Returns true if x is not nil and is greater than y, otherwise
+  "Returns true if x is not nil and is greater or equal than y, otherwise
   returns false."
   (if x (>= x y) false))
 
-
-;; Clojure Challenge
-
-(defn valid-to-scramble? [^String s]
+(defn lowercase? [^String s]
   "Returns true if given string s contains only lowercase letters
   from a to z, otherwise returns false."
   (if (re-matches #"[a-z]+" (or s "")) true false))
 
-(spec/def ::lowercase valid-to-scramble?)
+
+;; Clojure Challenge
+
+(spec/def ::scramble?-args lowercase?)
 
 (defn scramble?
   "Returns true if a portion of str1 characters can be rearranged
-  to match str2 otherwise returns false."
+  to match str2, otherwise returns false. Arguments validation: see 'valid-to-scramble?' function"
   [^String str1 ^String str2]
   (let [args     [str1 str2]
-        problems (map (partial spec/explain-data ::lowercase) args)
-        searched (second args)
-        result   (->> args
-                      (map #(map (frequencies %) searched))
-                      (apply #(map gte-and-not-nil? %1 %2))
-                      (every? true?))]
+        problems (map (partial spec/explain-data ::scramble?-args) args)
+        searched (second args)]
     (if (every? nil? problems)
-      result
+      (->> args
+           (map #(map (frequencies %) searched))
+           (apply #(map gte-and-not-nil? %1 %2))
+           (every? true?))
       {::errors problems})))
 
 
@@ -50,7 +51,7 @@
 (defn -main [& args]
   (println "Hello! :)")
   (let [[available-letters searched-word] args
-        execution-time    (benchmark (apply scramble? args))]
+        execution-time (benchmark (apply scramble? args))]
     (println (str "Finding " (count searched-word) "-letters word "
                   "in " (count available-letters) " available letters took "
                   execution-time " miliseconds."))))

@@ -33,11 +33,16 @@
           problems (transduce spec-problems-counts + errors)]
       (is (= 1 problems)))
 
+    (let [result (scramble? (String/valueOf 1)
+                            (String/valueOf 0.0))
+          errors (:clojure-challenge.core/errors result)
+          problems (transduce spec-problems-counts + errors)]
+      (is (= 2 problems)))
+
     (is (thrown? java.lang.ClassCastException (scramble? [] "asdas")))
     (is (thrown? java.lang.ClassCastException (scramble? "dhgdfg" #{})))
     (is (thrown? java.lang.ClassCastException (scramble? '() "asdasd")))
-    (is (thrown? java.lang.ClassCastException (scramble? '() {})))
-    )
+    (is (thrown? java.lang.ClassCastException (scramble? '() {}))))
 
   (testing "when lowercase letters not from a to z"
     (let [result (scramble? "ąśðąśðęæ" "world")
@@ -61,11 +66,11 @@
       (is (= 2 problems)))))
 
 (deftest test-valid-to-scramble?
-  (is (= false (valid-to-scramble? "uashiduh23rjsi3b5h23bj2hbkjh23b4kj2h3")))
-  (is (= true  (valid-to-scramble? "uashiduhrjsibhbjhbkjhbkjh")))
-  (is (= false (valid-to-scramble? "uashiduhrjs % {i} -> 0bhbjhbkjhbSkjh")))
-  (is (= false (valid-to-scramble? "ASDASDASDAWRAEFSSSE$%#Q$#$T")))
-  (is (= false (valid-to-scramble? "asdasdas ")))
-  (is (= false (valid-to-scramble? "ółść")))
-  (is (= false (valid-to-scramble? nil)))
-  (is (= false (valid-to-scramble? ""))))
+  (is (= false (lowercase? "uashiduh23rjsi3b5h23bj2hbkjh23b4kj2h3")))
+  (is (= true (lowercase? "uashiduhrjsibhbjhbkjhbkjh")))
+  (is (= false (lowercase? "uashiduhrjs % {i} -> 0bhbjhbkjhbSkjh")))
+  (is (= false (lowercase? "ASDASDASDAWRAEFSSSE$%#Q$#$T")))
+  (is (= false (lowercase? "asdasdas ")))
+  (is (= false (lowercase? "ółść")))
+  (is (= false (lowercase? nil)))
+  (is (= false (lowercase? ""))))
