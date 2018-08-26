@@ -11,20 +11,25 @@
 
 (defn valid-to-scramble? [^String s]
   "Returns true if given string s contains only lowercase letters
-  from a to z."
-  (if (re-matches #"[a-z]+" s) true false))
+  from a to z, otherwise returns false."
+  (if (re-matches #"[a-z]+" (or s "")) true false))
 
-(spec/def ::lowercase #(partial valid-to-scramble? (or % "")))
+(spec/def ::lowercase valid-to-scramble?)
 
 (defn scramble?
   "Returns true if a portion of str1 characters can be rearranged
   to match str2 otherwise returns false."
-  [str1 str2]
-  (let [args [str1 str2]]
-    (->> args
-         (map    #(map (frequencies %) (set str2)))
-         (apply  #(map gte-and-not-nil? %1 %2))
-         (every? true?))))
+  [^String str1 ^String str2]
+  (let [args     [str1 str2]
+        problems (map (partial spec/explain-data ::lowercase) args)
+        searched (second args)
+        result   (->> args
+                      (map #(map (frequencies %) searched))
+                      (apply #(map gte-and-not-nil? %1 %2))
+                      (every? true?))]
+    (if (every? nil? problems)
+      result
+      {::errors problems})))
 
 
 ;; Benchmarking
@@ -43,9 +48,8 @@
 
 (defn -main [& args]
   (println "Hello! :)")
-  (let [available-letters (apply str (repeat 1000000 "xzvxvvxffgfdjgopoisehrugidhlkjghlkhjslkjgefasdfsadfwfsadfasfdeasdfasdlfaafsdisaffsdgsdfsdfnadssadsaessasdasdasdasdisslassssssssewasdasd"))
-        searched-word     (apply str (repeat 7000 "ewelina"))
-        execution-time    (benchmark (scramble? available-letters searched-word))]
+  (let [[available-letters searched-word] args
+        execution-time    (benchmark (apply scramble? args))]
     (println (str "Finding " (count searched-word) "-letters word "
                   "in " (count available-letters) " available letters took "
                   execution-time " miliseconds."))))
