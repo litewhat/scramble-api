@@ -2,6 +2,13 @@
   (:require [clojure.test :refer :all]
             [clojure-challenge.core :refer :all]))
 
+
+(def spec-problems-counts
+  (comp
+    (map :clojure.spec.alpha/problems)
+    (map count)))
+
+
 (deftest test-scramble?
   (testing "when lowercase letters from a to z"
     (is (= true  (scramble? "rekqodlw" "world")))
@@ -11,26 +18,47 @@
     (is (= false (scramble? "barforu" "foobar"))))
 
   (testing "when args other than strings"
-    (let [result (scramble? nil nil)]
-      (is (not= '(nil nil) (:clojure-challenge.core/errors result)))))
+    (let [result (scramble? nil nil)
+          errors (:clojure-challenge.core/errors result)
+          problems (transduce spec-problems-counts + errors)]
+      (is (= 2 problems)))
 
-  ;(testing "when lowercase letters not from a to z"
-    ;(is (= nil (scramble? "ąśąśśś" "world")))
-    ;(is (= nil (scramble? "ąśąśśś" "world")))
-    ;(is (= nil (scramble? "ąśąśśś" "world")))
-    ;(is (= nil (scramble? "ąśąśśś" "world")))
-    ;
-    ;(is (= nil (scramble? nil "world")))
-    ;(is (= nil (scramble? nil nil)))
+    (let [result (scramble? nil "world")
+          errors (:clojure-challenge.core/errors result)
+          problems (transduce spec-problems-counts + errors)]
+      (is (= 1 problems)))
 
-    ;)
+    (let [result (scramble? "world" nil)
+          errors (:clojure-challenge.core/errors result)
+          problems (transduce spec-problems-counts + errors)]
+      (is (= 1 problems)))
 
-  ;  (is (= nil (scramble? "cedewaraaossoqqyt" "codewars")))
-  ;  (is (= nil (scramble? "katas" "steak")))
-  ;  (is (= nil (scramble? "ala" "ala")))
-  ;  (is (= nil (scramble? "barforu" "foobar"))))
-  ;
-  )
+    (is (thrown? java.lang.ClassCastException (scramble? [] "asdas")))
+    (is (thrown? java.lang.ClassCastException (scramble? "dhgdfg" #{})))
+    (is (thrown? java.lang.ClassCastException (scramble? '() "asdasd")))
+    (is (thrown? java.lang.ClassCastException (scramble? '() {})))
+    )
+
+  (testing "when lowercase letters not from a to z"
+    (let [result (scramble? "ąśðąśðęæ" "world")
+          errors (:clojure-challenge.core/errors result)
+          problems (transduce spec-problems-counts + errors)]
+      (is (= 1 problems)))
+
+    (let [result (scramble? "ąśðąśðęæ" "ASdasdad")
+          errors (:clojure-challenge.core/errors result)
+          problems (transduce spec-problems-counts + errors)]
+      (is (= 2 problems)))
+
+    (let [result (scramble? "akfgks,sdpwqplxz" "asdwwasd ")
+          errors (:clojure-challenge.core/errors result)
+          problems (transduce spec-problems-counts + errors)]
+      (is (= 2 problems)))
+
+    (let [result (scramble? "" "gbf24")
+          errors (:clojure-challenge.core/errors result)
+          problems (transduce spec-problems-counts + errors)]
+      (is (= 2 problems)))))
 
 (deftest test-valid-to-scramble?
   (is (= false (valid-to-scramble? "uashiduh23rjsi3b5h23bj2hbkjh23b4kj2h3")))

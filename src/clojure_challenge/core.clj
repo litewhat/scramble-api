@@ -1,5 +1,6 @@
 (ns clojure-challenge.core
-  (:require [clojure.spec.alpha :as spec]))
+  (:require [clojure.spec.alpha :as spec])
+  (:gen-class))
 
 (defn gte-and-not-nil? [x y]
   "Returns true if x is not nil and is greater than y, otherwise
