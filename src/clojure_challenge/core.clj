@@ -15,22 +15,27 @@
   (if (re-matches #"[a-z]+" (or s "")) true false))
 
 
-;; Clojure Challenge
+;; Scramble?
 
 (spec/def ::scramble?-args lowercase?)
 
 (defn scramble?
   "Returns true if a portion of str1 characters can be rearranged
-  to match str2, otherwise returns false. Arguments validation: see 'valid-to-scramble?' function"
+  to match str2, otherwise returns false.
+  Arguments validation: see ::scramble?-args spec."
   [^String str1 ^String str2]
   (let [args     [str1 str2]
         problems (map (partial spec/explain-data ::scramble?-args) args)
-        searched (second args)]
+        searched (second args)
+        alg-fn   (fn [args]
+                   (->> args
+                        (map    #(map (frequencies %) searched))
+                        (apply  #(map gte-and-not-nil? %1 %2))
+                        (every? true?)))
+        result   (delay (alg-fn args))]
+    (assert (= false (realized? result)))
     (if (every? nil? problems)
-      (->> args
-           (map #(map (frequencies %) searched))
-           (apply #(map gte-and-not-nil? %1 %2))
-           (every? true?))
+      @result
       {::errors problems})))
 
 
@@ -45,6 +50,7 @@
           (- (. System (nanoTime))
              start#))
         1000000.0)))
+
 
 ;; Main
 
