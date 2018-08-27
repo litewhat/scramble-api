@@ -2,10 +2,11 @@
   (:require [clojure.spec.alpha :as spec])
   (:gen-class))
 
+
 ;; Preds
 
 (defn gte-and-not-nil? [x y]
-  "Returns true if x is not nil and is greater or equal than y, otherwise
+  "Returns true if x is not nil and is greater or equal y, otherwise
   returns false."
   (if x (>= x y) false))
 
