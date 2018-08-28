@@ -34,7 +34,6 @@
                         (apply  #(map gte-and-not-nil? %1 %2))
                         (every? true?)))
         result   (delay (alg-fn args))]
-    (assert (= false (realized? result)))
     (if (every? nil? problems)
       @result
       {::errors problems})))
