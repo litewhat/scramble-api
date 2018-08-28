@@ -1,6 +1,6 @@
-(ns clojure-challenge.services.api.core
+(ns clojure-challenge.services.api.app
   (:require [clojure-challenge.services.api.handler :as handler]
-            [clojure-challenge.services.api.nrepl:as nrepl]
+            [clojure-challenge.services.api.nrepl :as nrepl]
             [luminus.http-server :as http]
             [clojure-challenge.services.api.config :refer [env]]
             [clojure.tools.cli :refer [parse-opts]]
@@ -45,5 +45,4 @@
     (log/info component "started"))
   (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app)))
 
-(defn -main [& args]
-  (start-app args))
+

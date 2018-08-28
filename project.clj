@@ -5,8 +5,6 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :main clojure-challenge.core
-
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [clj-time "0.14.4"]
                  [compojure "1.6.1"]
@@ -32,5 +30,46 @@
                  [ring/ring-defaults "0.3.2"]
                  [selmer "1.12.0"]]
 
-  :profiles {:dev {:plugins [[com.jakemccrary/lein-test-refresh "0.23.0"]
-                             ]}})
+  :min-lein-version "2.0.0"
+
+  :source-paths   ["src/clj"]
+  :test-paths     ["test/clj"]
+  :resource-paths ["resources"]
+  :target-path    "target/%s/"
+
+  :main ^:skip-aot clojure-challenge.main
+
+  :plugins [[lein-immutant "2.1.0"]]
+
+  :profiles {:uberjar       {:omit-source    true
+                             :aot            :all
+                             :uberjar-name   "api-service.jar"
+                             :source-paths   ["env/prod/clj"]
+                             :resource-paths ["env/prod/resources"]}
+
+             :dev           [:project/dev :profiles/dev]
+
+             :test          [:project/dev :project/test :profiles/test]
+
+             :project/dev   {:jvm-opts       ["-Dconf=dev-config.edn"]
+                             :dependencies   [[expound "0.7.1"]
+                                              [pjstadig/humane-test-output "0.8.3"]
+                                              [prone "1.6.0"]
+                                              [ring/ring-devel "1.6.3"]
+                                              [ring/ring-mock "0.3.2"]]
+
+                             :plugins        [[com.jakemccrary/lein-test-refresh "0.23.0"]]
+
+                             :source-paths   ["env/dev/clj"]
+                             :resource-paths ["env/dev/resources"]
+                             :repl-options   {:init-ns user}
+                             :injections     [(require 'pjstadig.humane-test-output)
+                                              (pjstadig.humane-test-output/activate!)]}
+
+             :project/test  {:jvm-opts       ["-Dconf=test-config.edn"]
+                             :resource-paths ["env/test/resources"]}
+
+             :profiles/dev  {}
+
+             :profiles/test {}}
+  )
