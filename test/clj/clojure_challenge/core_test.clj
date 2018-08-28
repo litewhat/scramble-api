@@ -1,4 +1,4 @@
-(ns clojure-challenge.core-test
+(ns clojure-challenge.core_test
   (:require [clojure.test :refer :all]
             [clojure-challenge.core :refer :all]))
 

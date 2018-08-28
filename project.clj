@@ -43,7 +43,7 @@
 
   :profiles {:uberjar       {:omit-source    true
                              :aot            :all
-                             :uberjar-name   "api-service.jar"
+                             :uberjar-name   "app.jar"
                              :source-paths   ["env/prod/clj"]
                              :resource-paths ["env/prod/resources"]}
 

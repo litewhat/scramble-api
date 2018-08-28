@@ -1,18 +1,28 @@
 (ns clojure-challenge.services.api.routes.services
-  (:require [ring.util.http-response :refer :all]
+  (:require [clojure-challenge.core :refer [scramble?]]
+            [ring.util.http-response :refer :all]
             [compojure.api.sweet :refer :all]
             [schema.core :as s]))
 
 
 (defapi service-routes
-  {:swagger {:ui   "/swagger-ui"
+  {:swagger {:ui   "/docs"
              :spec "/swagger.json"
              :data {:info {:version     "1.0.0"
                            :title       "Sample API"
                            :description "Sample Services"}}}}
+  (context "/" []
+    :tags ["scramble?"]
+
+    (POST "/scramble" []
+      :return Boolean
+      :body-params [str1 :- String
+                    str2 :- String]
+      :summary "scramble? FIXME!"
+      (scramble? str1 str2)))
 
   (context "/api" []
-    :tags ["thingie"]
+    :tags ["examples"]
 
     (GET "/plus" []
       :return Long
