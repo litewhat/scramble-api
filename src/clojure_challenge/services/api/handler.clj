@@ -1,8 +1,7 @@
 (ns clojure-challenge.services.api.handler
-  (:require [api-service.middleware :as middleware]
-            [api-service.routes.services :refer [service-routes]]
-            [api-service.env :refer [defaults]]
-
+  (:require [clojure-challenge.services.api.middleware :as middleware]
+            [clojure-challenge.services.api.routes.services :refer [service-routes]]
+            [clojure-challenge.services.api.env :refer [defaults]]
             [compojure.core :refer [routes wrap-routes]]
             [ring.util.http-response :as response]
             [compojure.route :as route]

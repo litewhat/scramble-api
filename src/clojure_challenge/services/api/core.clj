@@ -1,8 +1,8 @@
 (ns clojure-challenge.services.api.core
-  (:require [api-service.handler :as handler]
-            [api-service.nrepl :as nrepl]
+  (:require [clojure-challenge.services.api.handler :as handler]
+            [clojure-challenge.services.api.nrepl:as nrepl]
             [luminus.http-server :as http]
-            [api-service.config :refer [env]]
+            [clojure-challenge.services.api.config :refer [env]]
             [clojure.tools.cli :refer [parse-opts]]
             [clojure.tools.logging :as log]
             [mount.core :as mount])

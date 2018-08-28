@@ -1,7 +1,6 @@
 (ns clojure-challenge.services.api.middleware
-  (:require [api-service.env :refer [defaults]]
-            [api-service.config :refer [env]]
-
+  (:require [clojure-challenge.services.api.config :refer [env]]
+            [clojure-challenge.services.api.env :refer [defaults]]
             [ring.middleware.flash :refer [wrap-flash]]
             [immutant.web.middleware :refer [wrap-session]]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]))
