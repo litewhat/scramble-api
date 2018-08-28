@@ -6,6 +6,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :main clojure-challenge.core
-  :dependencies [[org.clojure/clojure "1.9.0"]
-                 [org.clojure/math.combinatorics "0.1.4"]]
-  :profiles {:dev {:plugins [[com.jakemccrary/lein-test-refresh "0.23.0"]]}})
+
+  :dependencies [[org.clojure/clojure "1.9.0"]]
+
+  :profiles {:dev {:plugins [[com.jakemccrary/lein-test-refresh "0.23.0"]
+                             ]}})
