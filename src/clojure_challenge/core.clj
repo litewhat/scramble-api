@@ -32,10 +32,9 @@
                    (->> args
                         (map    #(map (frequencies %) searched))
                         (apply  #(map gte-and-not-nil? %1 %2))
-                        (every? true?)))
-        result   (delay (alg-fn args))]
+                        (every? true?)))]
     (if (every? nil? problems)
-      @result
+      (alg-fn args)
       {::errors problems})))
 
 
