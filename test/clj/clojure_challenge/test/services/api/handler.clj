@@ -61,6 +61,13 @@
       (is (= 400 (:status response)))
       (is (not= nil (:errors body))))
 
+    (let [body-params {}
+          request     (mock-api-request :post "/api/scramble" body-params)
+          response    (app request)
+          body        (parse-body (:body response))]
+      (is (= 400 (:status response)))
+      (is (not= nil (:errors body))))
+
     (let [body-params {:str1 "abracadabra" :str2 nil}
           request     (mock-api-request :post "/api/scramble" body-params)
           response    (app request)
