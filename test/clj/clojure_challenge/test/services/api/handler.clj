@@ -10,7 +10,7 @@
 (defn parse-body [body]
   (cheshire/parse-string (slurp body) true))
 
-(defn make-api-request-mock [^Keyword method ^String url body-params]
+(defn mock-api-request [^Keyword method ^String url body-params]
   (-> (mock/request method url)
       (mock/content-type "application/json")
       (mock/body (cheshire/generate-string body-params))))
@@ -26,48 +26,47 @@
 (deftest scramble-route
   (testing "when valid params provided"
     (let [body-params {:str1 "tasak" :str2 "kaset"}
-          request     (make-api-request-mock :post "/api/scramble" body-params)
+          request     (mock-api-request :post "/api/scramble" body-params)
           response    (app request)
           body        (parse-body (:body response))]
       (is (= 200 (:status response)))
       (is (= false body)))
 
     (let [body-params {:str1 "cebownafjeodrsasqp" :str2 "codepen"}
-          request     (make-api-request-mock :post "/api/scramble" body-params)
+          request     (mock-api-request :post "/api/scramble" body-params)
           response    (app request)
           body        (parse-body (:body response))]
       (is (= 200 (:status response)))
       (is (= true body))))
 
-  (comment
-    (testing "when invalid params provided"
-      (let [body-params {:str1 1 :str2 "codepen"}
-            request     (make-api-request-mock :post "/api/scramble" body-params)
-            response    (app request)
-            body        (parse-body (:body response))]
-        (is (= 400 (:status response)))
-        (is (= {:errors nil} body)))
+  (testing "when invalid params provided"
+    (let [body-params {:str1 1 :str2 "codepen"}
+          request     (mock-api-request :post "/api/scramble" body-params)
+          response    (app request)
+          body        (parse-body (:body response))]
+      (is (= 400 (:status response)))
+      (is (not= nil (:errors body))))
 
-      (let [body-params {:str1 1 :str2 1}
-            request     (make-api-request-mock :post "/api/scramble" body-params)
-            response    (app request)
-            body        (parse-body (:body response))]
-        (is (= 400 (:status response)))
-        (is (= {:errors nil} body)))
+    (let [body-params {:str1 1 :str2 1}
+          request     (mock-api-request :post "/api/scramble" body-params)
+          response    (app request)
+          body        (parse-body (:body response))]
+      (is (= 400 (:status response)))
+      (is (not= nil (:errors body))))
 
-      (let [body-params {:str2 1}
-            request     (make-api-request-mock :post "/api/scramble" body-params)
-            response    (app request)
-            body        (parse-body (:body response))]
-        (is (= 400 (:status response)))
-        (is (= {:errors nil} body)))
+    (let [body-params {:str2 1}
+          request     (mock-api-request :post "/api/scramble" body-params)
+          response    (app request)
+          body        (parse-body (:body response))]
+      (is (= 400 (:status response)))
+      (is (not= nil (:errors body))))
 
-      (let [body-params {:str1 "abracadabra" :str2 nil}
-            request     (make-api-request-mock :post "/api/scramble" body-params)
-            response    (app request)
-            body        (parse-body (:body response))]
-        (is (= 400 (:status response)))
-        (is (= {:errors nil} body)))))
+    (let [body-params {:str1 "abracadabra" :str2 nil}
+          request     (mock-api-request :post "/api/scramble" body-params)
+          response    (app request)
+          body        (parse-body (:body response))]
+      (is (= 400 (:status response)))
+      (is (not= nil (:errors body)))))
   )
 
 (deftest test-app
