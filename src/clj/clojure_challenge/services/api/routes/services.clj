@@ -11,7 +11,8 @@
              :data {:info {:version     "1.0.0"
                            :title       "Sample API"
                            :description "Sample Services"}}}}
-  (context "/" []
+
+  (context "/api" []
     :tags ["scramble?"]
 
     (POST "/scramble" []
@@ -19,10 +20,7 @@
       :body-params [str1 :- String
                     str2 :- String]
       :summary "scramble? FIXME!"
-      (scramble? str1 str2)))
-
-  (context "/api" []
-    :tags ["examples"]
+      (ok (scramble? str1 str2)))
 
     (GET "/plus" []
       :return Long
