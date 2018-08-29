@@ -7,7 +7,7 @@
 (use-fixtures
   :once
   (fn [f]
-    (mount/start #'clojure-challenge.services.api.config/env
+    (mount/start #'clojure-challenge.services.config/env
                  #'clojure-challenge.services.api.handler/app)
     (f)))
 

@@ -1,4 +1,4 @@
-(ns clojure-challenge.services.api.config
+(ns clojure-challenge.services.config
   (:require [cprop.core :refer [load-config]]
             [cprop.source :as source]
             [mount.core :refer [args defstate]]))

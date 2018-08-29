@@ -1,4 +1,4 @@
-(ns clojure-challenge.services.api.nrepl
+(ns clojure-challenge.services.nrepl
   (:require [nrepl.server :as nrepl]
             [clojure.tools.logging :as log]))
 
