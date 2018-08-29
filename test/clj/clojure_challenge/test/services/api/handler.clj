@@ -7,8 +7,7 @@
   (:import (clojure.lang Keyword)))
 
 
-(defn parse-body [body]
-  (cheshire/parse-string (slurp body) true))
+(def parse-body #(cheshire/parse-string (slurp %) true))
 
 (defn mock-api-request [^Keyword method ^String url body-params]
   (-> (mock/request method url)
@@ -43,37 +42,44 @@
     (let [body-params {:str1 1 :str2 "codepen"}
           request     (mock-api-request :post "/api/scramble" body-params)
           response    (app request)
-          body        (parse-body (:body response))]
+          body        (parse-body (:body response))
+          errors      (:errors body)]
       (is (= 400 (:status response)))
-      (is (not= nil (:errors body))))
+      (is (not= nil errors)))
 
     (let [body-params {:str1 1 :str2 1}
           request     (mock-api-request :post "/api/scramble" body-params)
           response    (app request)
-          body        (parse-body (:body response))]
+          body        (parse-body (:body response))
+          errors      (:errors body)]
       (is (= 400 (:status response)))
-      (is (not= nil (:errors body))))
+      (is (not= nil errors)))
 
     (let [body-params {:str2 1}
           request     (mock-api-request :post "/api/scramble" body-params)
           response    (app request)
-          body        (parse-body (:body response))]
+          body        (parse-body (:body response))
+          errors      (:errors body)]
       (is (= 400 (:status response)))
-      (is (not= nil (:errors body))))
+      (is (not= nil errors)))
 
     (let [body-params {}
           request     (mock-api-request :post "/api/scramble" body-params)
           response    (app request)
-          body        (parse-body (:body response))]
+          body        (parse-body (:body response))
+          errors      (:errors body)]
       (is (= 400 (:status response)))
-      (is (not= nil (:errors body))))
+      (is (= {:str1 "missing-required-key"
+              :str2 "missing-required-key"}
+             errors)))
 
     (let [body-params {:str1 "abracadabra" :str2 nil}
           request     (mock-api-request :post "/api/scramble" body-params)
           response    (app request)
-          body        (parse-body (:body response))]
+          body        (parse-body (:body response))
+          errors      (:errors body)]
       (is (= 400 (:status response)))
-      (is (not= nil (:errors body)))))
+      (is (not= nil errors))))
   )
 
 (deftest test-app
