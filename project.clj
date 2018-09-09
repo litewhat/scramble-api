@@ -25,6 +25,7 @@
                  [org.webjars/font-awesome "5.2.0"]
                  [org.webjars/jquery "3.3.1-1"]
                  [org.webjars/webjars-locator "0.34"]
+                 [ring-cors "0.1.12"]
                  [ring-webjars "0.2.0"]
                  [ring/ring-core "1.6.3"]
                  [ring/ring-defaults "0.3.2"]
