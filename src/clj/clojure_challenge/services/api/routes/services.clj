@@ -9,8 +9,8 @@
   {:swagger {:ui   "/docs"
              :spec "/swagger.json"
              :data {:info {:version     "1.0.0"
-                           :title       "Sample API"
-                           :description "Sample Services"}}}}
+                           :title       "Scramble API"
+                           :description "Scramble service"}}}}
 
   (context "/api" []
     :tags ["scramble?"]

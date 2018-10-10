@@ -15,7 +15,7 @@
   :start
   (middleware/wrap-base
     (routes
-          #'service-routes
-          (route/not-found
-             "page not found"))))
+      #'service-routes
+      (route/not-found
+        "page not found"))))
 
