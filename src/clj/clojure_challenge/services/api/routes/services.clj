@@ -1,8 +1,8 @@
 (ns clojure-challenge.services.api.routes.services
-  (:require [clojure-challenge.core :refer [scramble?]]
-            [ring.util.http-response :refer :all]
+  (:require [clojure.tools.logging :as log]
+            [clojure-challenge.core :refer [scramble?]]
             [compojure.api.sweet :refer :all]
-            [schema.core :as s]))
+            [ring.util.http-response :refer :all]))
 
 
 (defapi service-routes
@@ -20,7 +20,10 @@
       :body-params [str1 :- String
                     str2 :- String]
       :summary "scramble? FIXME!"
-      (ok (scramble? str1 str2)))
+      (let [response (ok (scramble? str1 str2))]
+        (log/info (str "Response: " response))
+        response))
+
 
     (GET "/plus" []
       :return Long
