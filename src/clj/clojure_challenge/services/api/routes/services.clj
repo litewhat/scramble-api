@@ -1,6 +1,6 @@
 (ns clojure-challenge.services.api.routes.services
   (:require [clojure.tools.logging :as log]
-            [clojure-challenge.core :refer [scramble?]]
+            [clojure-challenge.core :refer [scramble]]
             [compojure.api.sweet :refer :all]
             [ring.util.http-response :as response]))
 
@@ -16,14 +16,13 @@
     :tags ["scramble?"]
 
     (POST "/scramble" []
-      :return Boolean
       :body-params [str1 :- String
                     str2 :- String]
-      :summary "scramble? FIXME!"
-      (let [result (scramble? str1 str2)
+      :summary "Calls scramble? function."
+      (let [result (scramble str1 str2)
             response (if (boolean? result)
-                       (response/ok result)
-                       (response/bad-request result))]
+                       (response/ok {:result result})
+                       (response/bad-request {:errors result}))]
         (log/info (str "Result: " result))
         (log/info (str "Response: " response))
         response))

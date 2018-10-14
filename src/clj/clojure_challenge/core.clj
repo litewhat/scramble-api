@@ -22,19 +22,22 @@
 
 (defn scramble?
   "Returns true if a portion of str1 characters can be rearranged
-  to match str2, otherwise returns false.
-  Arguments validation: see ::scramble?-args spec."
+  to match str2, otherwise returns false."
+  [charsets]
+  (->> charsets
+       (map    #(map (frequencies %) (second charsets)))
+       (apply  #(map gte-and-not-nil? %1 %2))
+       (every? true?)))
+
+(def validate-scramble-inputs (partial spec/explain-data ::scramble?-args))
+
+(defn scramble
+  "if input strings are valid it runs calls scramble? function. Otherwise
+  return map of errors (see ::scramble?-args spec.)"
   [^String str1 ^String str2]
-  (let [args     [str1 str2]
-        problems (map (partial spec/explain-data ::scramble?-args) args)
-        searched (second args)
-        alg-fn   (fn [args]
-                   (->> args
-                        (map    #(map (frequencies %) searched))
-                        (apply  #(map gte-and-not-nil? %1 %2))
-                        (every? true?)))]
+  (let [problems (map validate-scramble-inputs [str1 str2])]
     (if (every? nil? problems)
-      (alg-fn args)
+      (scramble? [str1 str2])
       {::errors problems})))
 
 
@@ -56,7 +59,7 @@
 (defn -main [& args]
   (println "Hello! :)")
   (let [[available-letters searched-word] args
-        execution-time (benchmark (apply scramble? args))]
+        execution-time (benchmark (apply scramble args))]
     (println (str "Finding " (count searched-word) "-letters word "
                   "in " (count available-letters) " available letters took "
                   execution-time " miliseconds."))))

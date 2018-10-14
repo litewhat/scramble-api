@@ -29,14 +29,14 @@
           response    (app request)
           body        (parse-body (:body response))]
       (is (= 200 (:status response)))
-      (is (= false body)))
+      (is (= {:result false} body)))
 
     (let [body-params {:str1 "cebownafjeodrsasqp" :str2 "codepen"}
           request     (mock-api-request :post "/api/scramble" body-params)
           response    (app request)
           body        (parse-body (:body response))]
       (is (= 200 (:status response)))
-      (is (= true body))))
+      (is (= {:result true} body))))
 
   (testing "when invalid params provided"
     (let [body-params {:str1 1 :str2 "codepen"}
